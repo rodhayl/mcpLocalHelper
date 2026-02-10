@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "description": "MCP Local LLM Server - Agent-like, Plug-and-Play LLM integration with Plan Verification",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rodhayl/mcpLocalHelper.git"
+  },
+  "homepage": "https://github.com/rodhayl/mcpLocalHelper#readme",
+  "bugs": {
+    "url": "https://github.com/rodhayl/mcpLocalHelper/issues"
+  },
   "bin": {
     "mcp-local-llm": "dist/index.js"
   },
@@ -32,13 +40,26 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "validate-package-json": "node scripts/validate-package-json.js",
+    "prepack": "npm run build",
     "pack:dry-run": "npm pack --dry-run",
     "pack:check": "node scripts/check-packlist.js"
   },
-  "keywords": [],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "local-llm",
+    "llm",
+    "vscode"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "overrides": {
+    "diff": "^4.0.4"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.26.0",
     "cors": "^2.8.5",

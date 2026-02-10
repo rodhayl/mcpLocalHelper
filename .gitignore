@@ -26,6 +26,8 @@ env-*.settings
 /mcp.json
 /config.local.yml
 /config.overrides.yml
+!/env-automated-tests.settings
+!/env-opencode-optimized.settings
 !/config/env.settings.example
 !/config/env-automated-tests.settings
 !/config/env-opencode-optimized.settings
@@ -35,7 +37,7 @@ env-*.settings
 .opencode/
 .trae/
 .mcp-local-llm/
-/.github/
+/.github/copilot-instructions.md
 
 # Test/runtime artifacts
 /test-results/

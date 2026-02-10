@@ -1,0 +1,66 @@
+# MCP Local LLM Server - Environment Settings
+# This file is managed by the settings page and can be edited manually.
+
+# ============================================
+# CENTRAL CONFIG (JSON)
+# ============================================
+# All server configuration is centralized here.
+
+[config]
+CONFIG_JSON={"backends":[{"id":"ollama","type":"ollama","base_url":"http://127.0.0.1:11434","labels":{"priority":"primary"}},{"id":"lmstudio","type":"lmstudio","base_url":"http://127.0.0.1:1234","labels":{"priority":"secondary"}},{"id":"opencode-cli","type":"opencode","command":"opencode","args_template":["run","--format","json","--model","opencode/big-pickle","{prompt}"],"timeout":300000,"auto_approve":true},{"id":"copilot-cli","type":"copilot","command":"copilot","args_template":["--model","gpt-5-mini","-p","{prompt}","--allow-all","--no-ask-user"],"timeout":300000,"auto_approve":true}],"defaults":{"localBackendId":"opencode-cli","localModel":"qwen3-coder-30b-a3b-instruct"},"mcpServers":{"chrome-devtools":{"type":"stdio","command":"npx","args":["-y","chrome-devtools-mcp@latest","--isolated"],"autoConnect":false,"description":"Browser automation and DevTools access via MCP"},"context7":{"type":"stdio","command":"npx","args":["-y","@upstash/context7-mcp@latest"],"autoConnect":false,"description":"Up-to-date library documentation lookup via Context7"}},"workspace":{"roots":["."],"defaultRoot":"."},"policy":{"allowlistPaths":["."],"maxFileBytes":131072},"systemProfile":{"exposeToLLM":false},"features":{"testingModeEnabled":true},"server":{"port":3000,"host":"127.0.0.1","maxConcurrentAgentTasks":1,"maxConcurrentClients":3,"agentTaskQueueTimeoutMs":180000},"toolGroups":{"activeMode":"DEVELOPMENT"},"readEnhancements":{"maxBatchFiles":50,"maxBatchBytes":262144,"maxLineSpan":2000,"enableIndexing":true,"indexingLanguages":["ts","js","py","md"],"maxConcurrentReads":8},"privacy":{"riskScoreThreshold":0.75,"secretPatterns":"default"},"editing":{"enabled":true,"backupEnabled":true,"backupDir":".mcp-backups","requirePreview":false,"maxFileSize":1048576},"toolDiscovery":{"fullToolList":true},"rateLimiter":{"enabled":false,"tokensPerSecond":10,"bucketSize":50,"maxClients":1000,"clientTtlMs":300000},"toolOrchestration":{"globalSettings":{"defaultOrchestrationEnabled":true,"defaultPreferredBackend":"auto","defaultFallbackToLocal":true,"defaultQuickMode":true,"pureCliMode":false,"probeOnStartup":true,"skipLocalLlmInit":false,"enableBatchExecution":true}}}
+
+# ============================================
+# PRODUCTION SETTINGS
+# ============================================
+# In production mode, only LOCAL LLM is available through MCP tools.
+# The calling LLM (e.g., GitHub Copilot) acts as the SOTA backend.
+
+[production]
+LOCAL_BACKEND_ID=lmstudio
+LOCAL_MODEL=
+LOCAL_BACKEND_URL=http://127.0.0.1:11434
+
+# ============================================
+# TESTING SETTINGS
+# ============================================
+# In testing mode, both LOCAL and SOTA backends can be configured.
+
+[testing]
+TESTING_MODE_ENABLED=true
+TEST_LOCAL_BACKEND_ID=lmstudio
+TEST_LOCAL_MODEL=
+TEST_LOCAL_BACKEND_URL=http://127.0.0.1:11434
+TEST_SOTA_BACKEND_TYPE=local
+TEST_SOTA_BACKEND_ID=
+TEST_SOTA_MODEL=
+TEST_SOTA_BACKEND_URL=
+OPENROUTER_API_KEY=
+
+# ============================================
+# ADVANCED SETTINGS
+# ============================================
+
+[advanced]
+SERVER_PORT=3000
+SERVER_HOST=127.0.0.1
+EXPOSE_SYSTEM_PROFILE=false
+TOOL_GROUP_MODE=DEVELOPMENT
+EMBEDDING_MODEL=
+EMBEDDING_BACKEND_URL=
+AGENT_MAX_STEPS=50
+AGENT_MAX_ACTIONS_PER_STEP=100
+AGENT_MAX_SUBTASKS=8
+AGENT_TIMEOUT_MS=300000
+
+# ============================================
+# CLI ORCHESTRATION SETTINGS
+# ============================================
+# Enable CLI orchestration for complex multi-step tasks
+
+[CLI_ORCHESTRATION]
+CLI_ORCHESTRATION_ENABLED=false
+CLI_ORCHESTRATION_BACKENDS=opencode-cli,copilot-cli
+CLI_AUTO_VERIFY=true
+CLI_SCORE_THRESHOLD=7
+CLI_MAX_ITERATIONS=3
+CLI_PURE_MODE=false
