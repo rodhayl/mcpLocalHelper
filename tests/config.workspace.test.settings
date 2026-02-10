@@ -1,0 +1,2 @@
+[config]
+CONFIG_JSON={"backends":[],"defaults":{"localBackendId":"none"},"workspace":{"roots":["."],"defaultRoot":"."},"policy":{"allowlistPaths":["C:\\\\"],"maxFileBytes":131072},"systemProfile":{"exposeToLLM":false}}

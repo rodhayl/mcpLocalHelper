@@ -1,0 +1,17 @@
+{
+  "mcp": {
+    "servers": {
+      "mcp-local-llm": {
+        "command": "node",
+        "args": [
+          "${env:MCP_LOCAL_LLM_PATH}/dist/index.js",
+          "--settings",
+          "${env:MCP_LOCAL_LLM_PATH}/env.settings"
+        ],
+        "env": {
+          "WORKSPACE_ROOT": "${workspaceFolder}"
+        }
+      }
+    }
+  }
+}

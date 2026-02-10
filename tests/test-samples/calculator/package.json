@@ -1,0 +1,11 @@
+{
+  "name": "calculator-test",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0"
+  }
+}

@@ -1,0 +1,177 @@
+# Dependencies / build output
+node_modules/
+dist/
+/dist_package/
+coverage/
+*.tsbuildinfo
+*.tgz
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.vitest-*.log
+vitest_*.log
+test-*.log
+test_*.log
+
+# Local env / machine-specific config (keep *.example files committed)
+.env
+.env.*
+*.env
+/env.settings
+env-*.settings
+/mcp.json
+/config.local.yml
+/config.overrides.yml
+!/config/env.settings.example
+!/config/env-automated-tests.settings
+!/config/env-opencode-optimized.settings
+
+# IDE-specific directories
+.gemini/
+.opencode/
+.trae/
+.mcp-local-llm/
+/.github/
+
+# Test/runtime artifacts
+/test-results/
+/tests/tmp/
+/tests/tmp.bin
+/tests/config.*.yml
+/tests/.mcp-backups/
+/test-orchestration-sample/
+/tests/test-samples/e2e-timing/
+/e2e-timing-report.json
+/translated/
+
+# Test reports directory
+TEST_PROMPTS/REPORTS/
+
+# Test result files
+tests/MCP_*_RESULTS.md
+tests/MCP_*_REPORT.md
+tests/MCP_*_COVERAGE.md
+tests/*_TOKEN_SAVINGS*.md
+tests/MCP_*_TEST*.md
+tests/*_VERIFICATION*.md
+tests/prompt_alias_test.txt
+tests/qa-feedback-*.test.ts
+
+# Test output files (scripts/)
+t1_output.json
+token_report_with_ground_truth.json
+token_report.json
+report_summary.md
+
+# Test output files
+t1_output.json
+token_report_with_ground_truth.json
+report_summary.md
+
+# Debug tools directory
+debug_tools/
+
+# Caches / temp
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.eslintcache
+.prettiercache
+.cache/
+.temp/
+.tmp/
+/tmp/
+/tmp_test_dist/
+/phase3_test_output/
+/repo/
+/evidence/
+
+# MCP / agent tool caches (local only)
+.mcp_cache/
+.mcp-backups/
+.orchestration-plans/
+.kilocode/
+.roo/
+/_backup_dedup/
+
+# Local debug/output dirs & files (root-only)
+/logs/
+/screenshots/
+/output/
+/capture*.js
+/temp_script.js
+/server.log
+/server-*.log
+
+# Debug report artifacts (root-only; keep real config under src/ etc.)
+/test-*.txt
+/test_*.txt
+/*_test*.txt
+/*_output*.txt
+/*_results*.txt
+/*_failures*.txt
+/*_debug*.txt
+/*_errors*.txt
+/full_test_*.txt
+/final_test*.txt
+/truly_final_test.txt
+/absolutely_final_test.txt
+/individual_*_test.txt
+/unskip_test_results.txt
+/verify_scenarios*.txt
+
+# JSON debug artifacts (root-only; avoid ignoring real data files elsewhere)
+/123.json
+/123.txt
+/async_task_*.json
+/async_task_*.py
+/async_task_*.txt
+/AsyncTask*.json
+/*.cheatsheet.json
+**/*.cheatsheet.json
+/mcp_cheatsheet.json
+/chrome-devtools*.json
+**/chrome-devtools*.json
+/mcp_chrome*.json
+/mcp_tools_chrome*.json
+/context7-tools.json
+**/context7*.json
+/api_inventory.json
+/api-inventory.json
+/inventory.json
+/output.json
+/results.json
+/routes.json
+/summary.json
+/t6_done.json
+/token_report*.json
+/tool-schemas.json
+/agent_task_schema.json
+/wrapSuccessResponse*.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+
+# Virtualenvs (if used)
+.venv/
+venv/
+
+# Accidental root artifacts
+/a
+/C
+/count.txt
+/[(][{]
+/debug.ts
+/nul

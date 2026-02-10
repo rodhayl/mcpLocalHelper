@@ -1,0 +1,17 @@
+{
+    "mcpServers": {
+        "mcp-local-llm": {
+            "type": "stdio",
+            "command": "node",
+            "args": [
+                "${env:MCP_LOCAL_LLM_PATH}/dist/index.js",
+                "--settings",
+                "${env:MCP_LOCAL_LLM_PATH}/env.settings"
+            ],
+            "env": {
+                "MCP_STDIN_SHUTDOWN": "0",
+                "WORKSPACE_ROOT": "${workspaceFolder}"
+            }
+        }
+    }
+}

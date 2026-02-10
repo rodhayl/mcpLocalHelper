@@ -1,0 +1,73 @@
+{
+  "name": "mcplocalllm",
+  "version": "1.0.0",
+  "description": "MCP Local LLM Server - Agent-like, Plug-and-Play LLM integration with Plan Verification",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-local-llm": "dist/index.js"
+  },
+  "files": [
+    "dist/",
+    "config/env.settings.example",
+    "env.settings.example",
+    "mcp.json.example",
+    "LICENSE",
+    "README.md",
+    "docs/",
+    "docs/examples/",
+    "scripts/postinstall-helpers.js"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
+    "start": "node dist/index.js",
+    "pretest": "npm run build",
+    "test": "node scripts/run-tests-with-cleanup.js",
+    "test:watch": "vitest",
+    "test:summary": "jest --testPathPattern summary",
+    "cleanup:test-assets": "node scripts/cleanup-test-assets.js",
+    "cleanup:runtime": "node scripts/cleanup-runtime-artifacts.js",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "validate-package-json": "node scripts/validate-package-json.js",
+    "pack:dry-run": "npm pack --dry-run",
+    "pack:check": "node scripts/check-packlist.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "handlebars": "^4.7.8",
+    "js-yaml": "^4.1.1",
+    "systeminformation": "^5.30.7",
+    "typescript": "^5.9.3",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.10.1",
+    "@types/supertest": "^6.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.11",
+    "prettier": "^3.6.2",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.2",
+    "typescript-eslint": "^8.48.0",
+    "vitest": "^4.0.14"
+  }
+}
