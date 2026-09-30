@@ -1,15 +1,49 @@
-# MCP Local LLM Server
+# mcpLocalHelper
 
-A privacy-first MCP (Model Context Protocol) server that provides **unique LLM-enhanced tools** for VS Code Copilot. All analysis uses your local LLM - code never leaves your machine.
+Experimental MCP developer tooling for local-model assistance, code analysis and task delegation.
 
-## Key Features
+**Status: engineering prototype and portfolio case study. Not production-ready.** This repository preserves a working design and its development/testing material. It has not been certified for production security, reliability or compatibility with every current model and MCP client. Start with a disposable workspace and non-sensitive examples.
 
-- **Privacy-First**: All LLM analysis runs locally - your code never leaves your machine
-- **VS Code Copilot Optimized**: Designed to complement (not duplicate) VS Code's built-in tools
-- **LLM-Enhanced Tools**: Every tool adds intelligent analysis, not just raw data
-- **Symbol-Aware**: Understands code structure, not just text patterns
-- **Security Scanning**: Automatic detection of secrets, API keys, and vulnerabilities
-- **Multiple Backends**: Ollama, LM Studio, OpenRouter support
+## The problem I was exploring
+
+Developer agents can spend substantial context on tool descriptions and raw repository output. Local models can take on some analysis, but integrating them means dealing with workspace boundaries, model capabilities, failures and the hand-off back to the calling agent.
+
+I built this project to explore that integration: expose useful analysis through MCP, let an IDE agent delegate bounded work, and make local and optional external backends configurable. The value of this repository is the implementation and the decisions it makes visible, rather than a claim that MCP or hybrid inference was invented here.
+
+## What the code demonstrates
+
+- **Protocol and model integration:** MCP tool registration and adapters for local model servers, with optional external backends
+- **Code-analysis tooling:** duplicate-file, similar-function and duplicate-code analysis, evolved from earlier Python utilities
+- **Context management:** a small initial tool surface with discovery and progressive expansion instead of presenting every tool at once
+- **Operational concerns:** workspace configuration, input limits, backend timeouts, concurrency controls and failure reporting
+- **Evaluation practice:** deterministic tests alongside prompt-based evaluation material, with model output treated as something to review
+
+These are inspectable engineering choices. They are not evidence of customer adoption, measured business impact or an enterprise deployment.
+
+## Project history
+
+The project started as private MCP experiments in August 2025 and evolved across earlier repositories before this cleaned public release.
+
+| Date | Development milestone |
+| --- | --- |
+| August 2025 | Python MCP prototype, followed by duplicate-file/function/code analysis tools |
+| November 2025 | TypeScript server implementation with local-model adapters and configurable external-model access |
+| December 2025 | Migration of the Python analysis tools and addition of progressive tool discovery |
+| February 2026 | Clean public release as mcpLocalHelper |
+
+This chronology describes development history, not an earlier public release. The public history starts with [the initial release on 10 February 2026](https://github.com/rodhayl/mcpLocalHelper/commit/78b39901e09ea3b5787b7786ea8a3e65e5bfdda2). Its short commit history is a publication snapshot rather than the full development history. The earlier working repositories remain private.
+
+## Scope and safety limits
+
+- **Local execution is a configuration choice, not an end-to-end privacy guarantee.** External adapters can send data off-device. An MCP client may also forward tool results to its own cloud model, even when this server used a local backend
+- Redaction and path restrictions are safeguards with limitations. They do not establish complete secret detection, a hardened execution sandbox or regulatory compliance
+- Model-generated findings, edits and plans require review. Optional execution tools should only be evaluated with restricted permissions and disposable data
+- Client configuration examples below reflect the development period. Check the current client's MCP schema, supported tools and trust settings before using them
+- Test commands and historical evaluation material are retained for reproducibility. This documentation update does not constitute a fresh execution of those suites
+
+**Reviewed positioning: 30 September 2026.** The ecosystem has developed since this work began. Use this as a case study in building and assessing integrations; evaluate maintained alternatives against your present requirements before adopting it.
+
+---
 
 ## Documentation Map
 
@@ -269,7 +303,7 @@ The tool surface is consolidated into three tiers to keep ListTools small while 
 | `search` | Unified search (intelligent/structured/gather/filenames) |
 | `analyze_file` | LLM-powered file analysis |
 | `suggest_edit` | LLM-powered edit suggestions |
-| `local_code_review` | Privacy-preserving code review |
+| `local_code_review` | Model-assisted code review with configurable backend |
 | `security` | Secret scanning, risk analysis, redaction, and fixes |
 | `summarize` | File/directory/repo summaries |
 | `workspace` | Workspace metadata, snapshots, and exploration |
@@ -305,7 +339,7 @@ Invoke these prompts to run multi-tool workflows:
 |--------|-------------|
 | `/analyze-security` | Comprehensive security analysis |
 | `/find-todos` | Find and prioritize technical debt |
-| `/review-changes` | Privacy-preserving code review |
+| `/review-changes` | Guided code-review workflow |
 | `/explain-code` | Detailed code explanation |
 | `/generate-tests` | Generate comprehensive tests |
 | `/suggest-improvements` | Get refactoring suggestions |
@@ -371,19 +405,19 @@ Practical guidance:
 
 ## Why These Tools?
 
-### VS Code Copilot Bypass Strategy
+### Choosing a focused tool surface
 
-VS Code Copilot 1.106+ automatically disables MCP tools that duplicate built-in functionality. This server provides **unique value** that VS Code cannot replicate:
+The design aims to complement an IDE's existing file and terminal tools. Client behavior varies; duplicate-tool suppression is not a compatibility guarantee. The project explored:
 
-1. **Local LLM Intelligence**: Every tool is enhanced with local LLM analysis
-2. **Privacy Preservation**: Code analysis never leaves your machine
-3. **Automatic Redaction**: Secrets and sensitive data automatically removed
+1. **Local-model assistance**: Model-assisted analysis alongside deterministic tools
+2. **Configurable processing**: Local analysis where selected, with external paths requiring separate data-sharing review
+3. **Redaction safeguards**: Pattern-based filtering of some sensitive data, with incomplete coverage
 4. **Symbol Awareness**: Understands code structure, not just text
 5. **Security Scanning**: Built-in vulnerability detection
 
-### Tools NOT Included (VS Code Has Better Versions)
+### Tools delegated to the client
 
-These tools were intentionally removed because VS Code Copilot has superior built-in equivalents:
+Some overlapping tools were removed from the default exposed surface or retained only as hidden aliases. Where appropriate, use your client's supported equivalents:
 - `read_file` (hidden alias of `analyze_file`, not exposed via ListTools) -> Use VS Code's `#readFile`
 - `edit_file` -> Use VS Code's `#editFiles`
 - `create_file` -> Use VS Code's `#createFile`
@@ -452,14 +486,16 @@ Tools are organized into groups that can be enabled/disabled (examples only; see
 
 ## Privacy & Security
 
-- **Offline by Default**: Only local backends unless explicitly configured
-- **Content Redaction**: Automatic removal of secrets, API keys, sensitive data
-- **Path Restrictions**: Directory allowlist prevents unauthorized access
-- **Size Limits**: Prevents large file transfers
+- **Backend selection:** inspect the active configuration and the MCP client's own data flow; local adapters do not make the entire session offline
+- **Content redaction:** filters known patterns but can miss secrets, proprietary content and contextual identifiers
+- **Path restrictions:** configured allowlists narrow intended access; they are not a substitute for OS isolation
+- **Size limits:** bound some inputs; verify effective limits for the selected workflow
+
+Use only data you are permitted to share with every participating service. Review execution tools and external-provider settings before enabling them.
 
 ## Agent Scenarios Testing
 
-The project includes comprehensive agent scenarios tests that validate complex workflows and integration with external MCP servers.
+The project includes agent-scenario tests for selected workflows and external MCP integrations. Passing them in one setup does not validate every backend, client, security property or deployment.
 
 ### Running Agent Scenarios Tests
 
@@ -578,7 +614,7 @@ node scripts/cleanup-runtime-artifacts.js --dry-run
 +-----------------------------+
 |     MCP Local LLM Server    |
 | - LLM-Enhanced Tools        |
-| - Privacy Tools             |
+| - Data filtering            |
 | - Analysis Tools            |
 +--------------+--------------+
                |
@@ -586,8 +622,8 @@ node scripts/cleanup-runtime-artifacts.js --dry-run
  Backend Adapters: Ollama | LM Studio | OpenRouter | Generic OpenAI
                |
                v
-      Local LLM Backend
-    (Ollama, LM Studio, etc.)
+      Selected model backend
+    (local or explicitly external)
 ```
 
 ## License
